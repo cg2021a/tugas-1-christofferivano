@@ -177,7 +177,7 @@ function main(){
     gl.enableVertexAttribArray(colorAttribLocation);
 
     let dy = 0;
-    let speed = 0.01;
+    let speed = 0.0091;
 
     function render()
     {
