@@ -24,7 +24,7 @@ function main(){
     precision mediump float;
     varying vec4 v_Color;
     void main(){
-        gl_FragColor = vec4(0.755, 0, 0, 1.0);
+        gl_FragColor = v_Color;
     }`;
 
     var vertexShader = gl.createShader(gl.VERTEX_SHADER);
@@ -50,51 +50,74 @@ function main(){
     var vertices = [],
         vertCount = 2;
 
+        let color = [];
     // benda 1
 	box = [
-		0.5,0,
-		0.5,-1,
-		-0.5,-1,
-		-0.5,0,
-		-0.5,-1,
-		0,0.25
-		]
+    // 0.5, 0.5, 
+    // -0.5, 0.5, 
+    // -0.42, -1,
+
+    // 0.42, -1, 
+    // -0.41, -1, 
+    // 0.5, 0.5,
+    ]
+    for(let i = 0; i < 6; i++)
+    {
+      let r = 1;
+      let g = 1;
+      let b = 1;
+      color.push(r);
+      color.push(g);
+      color.push(b);
+      color.push(1);
+    }
     vertices = vertices.concat(box);
-    vertices = vertices.concat(box);
+    let p1_count = 0;
     for (var i=0.0; i<=360; i+=1) {
       // degrees to radians
       var j = i * Math.PI / 180;
       // X Y Z
-        if (i<=180)
+      p1_count++
+        if (i>=0)
         {
             var vert1 = [
               Math.sin(j)*0.5,
-              Math.cos(j)*0.5,
+              0.5 + Math.cos(j)*0.5,
               // 0,
             ];
             var vert2 = [
               0,
-              0,
+              0.5,
               // 0,
             ];
             
         }
-        else
-        {
-            var vert1 = [
-                Math.sin(j)*0.5,
-                Math.cos(j)*0.5,
-                // 0,
-              ];
-              var vert2 = [
-                0,
-                0,
-                // 0,
-              ];
-        }
+        // else
+        // {
+        //     var vert1 = [
+        //         Math.sin(j)*0.5,
+        //         0.5 + Math.cos(j)*0.5,
+        //         // 0,
+        //       ];
+        //       var vert2 = [
+        //         0,
+        //         0.5,
+        //         // 0,
+        //       ];
+        // }
         vertices = vertices.concat(vert1);
         vertices = vertices.concat(vert2);
+        console.log("1", vertices.length)
     }
+    for (let i = 0; i <= 720; i++) {
+        let r = 0;
+        let g = 1;
+        let b = 0;
+        color.push(r);
+        color.push(g);
+        color.push(b);
+        color.push(1);
+      }
     for (var i=90; i<=270; i+=1) {
         // degrees to radians
         var j = i * Math.PI / 180 ;
@@ -102,8 +125,8 @@ function main(){
           if (i<=180)
           {
               var vert1 = [
-                Math.sin(j)*0.5,
-                -1 + Math.cos(j)*0.5,
+                Math.sin(j)*0.42,
+                -1 + Math.cos(j)*0.42,
                 // 0,
               ];
               var vert2 = [
@@ -116,8 +139,8 @@ function main(){
           else
           {
               var vert1 = [
-                   Math.sin(j)*0.5,
-                  -1 + Math.cos(j)*0.5,
+                   Math.sin(j)*0.42,
+                  -1 + Math.cos(j)*0.42,
                   // 0,
                 ];
                 var vert2 = [
@@ -128,23 +151,59 @@ function main(){
           }
           vertices = vertices.concat(vert1);
           vertices = vertices.concat(vert2);
+          
+          console.log("2", vertices.length)
       }
-
-    var n = vertices.length / vertCount;
-
-    let color = []
-
-    for (let i = 0; i < n/2 - 3; i++) {
+      for (let i = 0; i <= 720; i++) {
         let r = 1;
         let g = 1;
         let b = 1;
-        for (let j = 0; j < 3; j++) {
-            color.push(r);
-            color.push(g);
-            color.push(b);
-            // color.push(0.124);
-        }
-    }
+        color.push(r);
+        color.push(g);
+        color.push(b);
+        color.push(1);
+      }
+
+    var n = vertices.length / vertCount;
+      console.log(vertices.length-720)
+
+    // for (let i = 0; i < 11; i++) {
+    //     let r = 1;
+    //     let g = 1;
+    //     let b = 1;
+    //     for (let j = 0; j < 3; j++) {
+    //         color.push(r);
+    //         color.push(g);
+    //         color.push(b);
+    //         // color.push(0.124);
+    //     }
+    // }
+
+    // for (let i = 0; i < vertices.length - 720; i++) {
+    //   let r = 1;
+    //   let g = 0.2;
+    //   let b = 0.2;
+    //   for (let j = 0; j < 3; j++) {
+    //       color.push(r);
+    //       color.push(g);
+    //       color.push(b);
+    //       color.push(1);
+    //   }
+    // }
+
+    // for (let i = 1457; i < vertices.length; i++) {
+    //   let r = 1;
+    //   let g = 0.2;
+    //   let b = 0.2;
+    //   // let o = 1;
+    //   for (let j = 0; j < 4; j++) {
+    //       color.push(r);
+    //       color.push(g);
+    //       color.push(b);
+    //       // color.push(o);
+    //       color.push(1);
+    //   }
+    // }
 
     var vertexBufferObject = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBufferObject);
@@ -155,7 +214,7 @@ function main(){
         positionAttribLocation, // attribut location
         vertCount, // number of elements per attribute
         gl.FLOAT, // type of elements
-        gl.FALSE,
+        false,
         0, // size of an individual vertex
         0 // offset from the beginning of a single vertex to this attribute
     );
@@ -168,9 +227,9 @@ function main(){
     var colorAttribLocation = gl.getAttribLocation(program, 'vertColor');
     gl.vertexAttribPointer(
         colorAttribLocation, // attribut location
-        vertCount, // number of elements per attribute
+        4, // number of elements per attribute
         gl.FLOAT, // type of elements
-        gl.FALSE,
+        false,
         0, // size of an individual vertex
         0 // offset from the beginning of a single vertex to this attribute
     );
