@@ -53,19 +53,19 @@ function main(){
         let color = [];
     // benda 1
 	box = [
-    // 0.5, 0.5, 
-    // -0.5, 0.5, 
-    // -0.42, -1,
+    0.5, 0.5, 
+    -0.5, 0.5, 
+    -0.42, -1,
 
-    // 0.42, -1, 
-    // -0.41, -1, 
-    // 0.5, 0.5,
+    0.42, -1, 
+    -0.41, -1, 
+    0.5, 0.5,
     ]
-    for(let i = 0; i < 6; i++)
+    for(let i = 0; i < 8; i++)
     {
-      let r = 1;
-      let g = 1;
-      let b = 1;
+      let r = 0.685;
+      let g = 0;
+      let b = 0;
       color.push(r);
       color.push(g);
       color.push(b);
@@ -73,11 +73,11 @@ function main(){
     }
     vertices = vertices.concat(box);
     let p1_count = 0;
-    for (var i=0.0; i<=360; i+=1) {
+    for (var i=0.0; i<=361; i+=1) {
       // degrees to radians
       var j = i * Math.PI / 180;
       // X Y Z
-      p1_count++
+      p1_count++;
         if (i>=0)
         {
             var vert1 = [
@@ -89,41 +89,34 @@ function main(){
               0,
               0.5,
               // 0,
-            ];
-            
+            ];   
         }
-        // else
-        // {
-        //     var vert1 = [
-        //         Math.sin(j)*0.5,
-        //         0.5 + Math.cos(j)*0.5,
-        //         // 0,
-        //       ];
-        //       var vert2 = [
-        //         0,
-        //         0.5,
-        //         // 0,
-        //       ];
-        // }
         vertices = vertices.concat(vert1);
         vertices = vertices.concat(vert2);
-        console.log("1", vertices.length)
+        console.log("1", p1_count);
     }
-    for (let i = 0; i <= 720; i++) {
-        let r = 0;
-        let g = 1;
+    for (let i = 0; i <= p1_count*2; i++) {
+        let r = 0.755;
+        let g = 0;
         let b = 0;
         color.push(r);
         color.push(g);
         color.push(b);
         color.push(1);
       }
+      var vert2 = [
+        0,
+        0.5,
+        // 0,
+      ];
+      vertices = vertices.concat(vert2);
+
+      let p2_count = 0;
     for (var i=90; i<=270; i+=1) {
         // degrees to radians
         var j = i * Math.PI / 180 ;
         // X Y Z
-          if (i<=180)
-          {
+        p2_count++;
               var vert1 = [
                 Math.sin(j)*0.42,
                 -1 + Math.cos(j)*0.42,
@@ -134,30 +127,15 @@ function main(){
                 -1,
                 // 0,
               ];
-              
-          }
-          else
-          {
-              var vert1 = [
-                   Math.sin(j)*0.42,
-                  -1 + Math.cos(j)*0.42,
-                  // 0,
-                ];
-                var vert2 = [
-                    0,
-                    -1,
-                  // 0,
-                ];
-          }
           vertices = vertices.concat(vert1);
           vertices = vertices.concat(vert2);
           
-          console.log("2", vertices.length)
+          // console.log("2", vertices.length)
       }
-      for (let i = 0; i <= 720; i++) {
-        let r = 1;
-        let g = 1;
-        let b = 1;
+      for (let i = 0; i <= p2_count*2; i++) {
+        let r = 0.8;
+        let g = 0.8;
+        let b = 0.8;
         color.push(r);
         color.push(g);
         color.push(b);
@@ -165,45 +143,6 @@ function main(){
       }
 
     var n = vertices.length / vertCount;
-      console.log(vertices.length-720)
-
-    // for (let i = 0; i < 11; i++) {
-    //     let r = 1;
-    //     let g = 1;
-    //     let b = 1;
-    //     for (let j = 0; j < 3; j++) {
-    //         color.push(r);
-    //         color.push(g);
-    //         color.push(b);
-    //         // color.push(0.124);
-    //     }
-    // }
-
-    // for (let i = 0; i < vertices.length - 720; i++) {
-    //   let r = 1;
-    //   let g = 0.2;
-    //   let b = 0.2;
-    //   for (let j = 0; j < 3; j++) {
-    //       color.push(r);
-    //       color.push(g);
-    //       color.push(b);
-    //       color.push(1);
-    //   }
-    // }
-
-    // for (let i = 1457; i < vertices.length; i++) {
-    //   let r = 1;
-    //   let g = 0.2;
-    //   let b = 0.2;
-    //   // let o = 1;
-    //   for (let j = 0; j < 4; j++) {
-    //       color.push(r);
-    //       color.push(g);
-    //       color.push(b);
-    //       // color.push(o);
-    //       color.push(1);
-    //   }
-    // }
 
     var vertexBufferObject = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBufferObject);
@@ -257,7 +196,8 @@ function main(){
         const object = gl.getUniformLocation(program, "object");
         gl.uniformMatrix4fv(object, false, leftObject);
     
-        gl.drawArrays(gl.TRIANGLE_STRIP, 0, n);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, n-361);
+        gl.drawArrays(gl.TRIANGLE_STRIP, n-361, 360);
          rightObject = [
             1.0, 0.0, 0.0, 0.0,
             0.0, 1.0, 0.0, 0.0,
@@ -267,7 +207,8 @@ function main(){
     
         gl.uniformMatrix4fv(object, false, rightObject);
     
-        gl.drawArrays(gl.TRIANGLE_STRIP, 0, n);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, n-361);
+        gl.drawArrays(gl.TRIANGLE_STRIP, n-361, 360);
 
         requestAnimationFrame(render);
     }
