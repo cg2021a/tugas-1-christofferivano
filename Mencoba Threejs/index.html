@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Document</title>
+    <script src="three.min.js"></script>
+</head>
+<body>
+    <div style="text-align: center;">
+        <h1>Christoffer Ivano - 05111940000091</h1>
+        <h2>Tugas Three JS</h2>
+    </div>
+    <!-- <div style="margin-top: 30px;">
+        <button id="button">DirectionalLight</button>
+        <button id="button2">AmbientLight</button>
+        <button id="button3">HemisphereLight</button>
+        <button id="button4">SpotLight</button>
+        <button id="button5" value="5">PointLight</button>
+    </div> -->
+    <div class="container" style="display: flex; justify-content: center;">
+        <select name="light" id="light" style="padding: 10px 10px 10px 10px;">
+            <option value="0">Directional Light</option>
+            <option value="1">Ambient Light</option>
+            <option value="2">Point Light</option>
+            <option value="3">Hemisphere Light</option>
+            <option value="4">Spotlight</option>
+        </select>
+    </div>
+    <canvas id="c"></canvas>
+</body>
+</html>
+
+
+<script>    
+    let scene, camera, renderer, cube, cone, octahedron, torus, torusKnot, light, lighting;
+    let createCube = function () {
+        let geometry = new THREE.BoxGeometry(1, 1, 1);
+        const material = new THREE.MeshPhongMaterial({color: 0x44aa88, wireframe: true});  // greenish blue
+        cube = new THREE.Mesh(geometry, material);
+        scene.add(cube);
+        cube.position.x = 2;
+    };
+
+    let createCone = function () {
+        const radius = 1;
+        const height = 2;
+        const radialSegments = 30;
+        const geometry = new THREE.ConeGeometry(radius, height, radialSegments);
+        const material = new THREE.MeshPhongMaterial({color: 0x8844aa, wireframe: true});
+        cone = new THREE.Mesh(geometry, material);
+        scene.add(cone);
+        cone.position.x = -2;
+    }
+
+    let createOctahedron = function () {
+        const radius = 1;  
+        const geometry = new THREE.OctahedronGeometry(radius, 0);
+        const material = new THREE.MeshPhongMaterial({color: "#4c4cff", wireframe: true});
+        octahedron = new THREE.Mesh(geometry, material);
+        scene.add(octahedron);
+        octahedron.position.x = 0;
+    }
+
+    let createTorus = function () {
+        const radius = 0.8;  
+        const tubeRadius = 0.3;  
+        const radialSegments = 8;  
+        const tubularSegments = 24;  
+        const geometry = new THREE.TorusGeometry(
+            radius, tubeRadius,
+            radialSegments, tubularSegments);
+        const material = new THREE.MeshBasicMaterial({color: "#ffff4d"});
+        torus = new THREE.Mesh(geometry, material);
+        scene.add(torus);
+        torus.position.x = -5;
+    }
+
+    let createTorusKnot = function () {
+        const radius = 0.7;  
+        const tubeRadius = 0.3;  
+        const radialSegments = 8;  
+        const tubularSegments = 64;  
+        const p = 2;  
+        const q = 3;  
+        const geometry = new THREE.TorusKnotGeometry(
+            radius, tubeRadius, tubularSegments, radialSegments, p, q);
+        const material = new THREE.MeshLambertMaterial({color: "#ff3232"});
+        torusKnot = new THREE.Mesh(geometry, material);
+        scene.add(torusKnot);
+        torusKnot.position.x = 0;
+    }
+
+    // let getLighting = function (lighting) {
+    //     console.log(lighting);
+    //     createLight(lighting);
+    // }
+
+    // let createLight = function (lighting) {
+    //     console.log("lighting", lighting)
+    //     //Directional light
+    //     if(lighting == 1){
+    //         const color = 0xFFFFFF;
+    //         const intensity = 1;
+    //         const light = new THREE.DirectionalLight(color, intensity);
+    //         light.position.set(-2, 2, 4);
+    //         scene.add(light);
+    //     }
+
+    //     //Ambient light
+    //     if(lighting == 2){
+    //         const color = 0xFFFFFF;
+    //         const intensity = 1;
+    //         const light = new THREE.AmbientLight(color, intensity);
+    //         scene.add(light);
+    //     }
+
+    //     //hemisphere light
+    //     if(lighting == 3){
+    //         const skyColor = 0xB1E1FF;  // light blue
+    //         const groundColor = 0xB97A20;  // brownish orange
+    //         const intensity = 1;
+    //         const light = new THREE.HemisphereLight(skyColor, groundColor, intensity);
+    //         scene.add(light);
+    //     }
+
+    //     //spotlight
+    //     if(lighting == 4){
+    //         const color = 0xFFFFFF;
+    //         const intensity = 1;
+    //         const light = new THREE.SpotLight(color, intensity);
+    //         light.position.set(0, 10, 0);
+    //         light.target.position.set(-5, 0, 0);
+    //         scene.add(light);
+    //         scene.add(light.target);
+    //     }
+
+    //     //pointlight
+    //     if(lighting == 5){
+    //         const color = 0xFFFFFF;
+    //         const intensity = 1;
+    //         const light = new THREE.PointLight(color, intensity);
+    //         light.power = 800;
+    //         light.decay = 2;
+    //         light.distance = Infinity;
+    //     }
+    // }
+
+    // set up the environment - 
+    // initiallize scene, camera, objects and renderer
+    let init = function () {
+            // 1. create the scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color("#696969");
+
+            // 2. create an locate the camera       
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight,
+                    1, 1000);
+            camera.position.z = 5;
+
+            // light = 0;
+            // light2 = 0;
+
+            // const btn = document.getElementById("button");
+            // btn.onclick = function () {
+            //     light2 = 1;
+            //     light = light2;
+            //     console.log("light", light)
+            //     getLighting(light);
+            // }
+
+            // const btn2 = document.getElementById("button2");
+            // btn2.onclick = function () {
+            //     light2 = 2;
+            //     light = light2;
+            //     console.log("light", light)
+            //     getLighting(light);
+            // }
+
+            // const btn3 = document.getElementById("button3");
+            // btn3.onclick = function () {
+            //     light2 = 3;
+            //     light = light2;
+            //     console.log("light", light)
+            //     getLighting(light);
+            // }
+
+            // const btn4 = document.getElementById("button4");
+            // btn4.onclick = function () {
+            //     light2 = 4;
+            //     light = light2;
+            //     console.log("light", light)
+            //     getLighting(light);
+            // }
+
+            // const btn5 = document.getElementById("button5");
+            // btn5.onclick = function (e) {
+            //     light2 = e.target.value;
+            //     light = light2;
+            //     console.log("light", light)
+            //     getLighting(light);
+            // }
+
+            // console.log("light", light)
+            // console.log("light2", light2)
+            // 3. create an locate the object on the scene           
+            createCube();
+            createCone();
+            createOctahedron();
+            createTorus();
+            createTorusKnot();
+            // createLight();
+
+            const dir = new THREE.DirectionalLight(0xffffff, 1);
+            dir.position.set(-5, 5, 5);
+            const ambient = new THREE.AmbientLight(0xffffff, 1);
+            ambient.position.set(0, 10, 0);
+            const point = new THREE.PointLight(0xffffff, 1, 100);
+            point.position.set(5, 5, 5);
+            const hemis = new THREE.HemisphereLight(0xffffff, '#3B82F6', 0.8);
+            hemis.position.set(0, 10, 0);
+            const spot = new THREE.SpotLight(0xffffff, 1, 50);
+            spot.position.set(0, 5, 5);
+
+            const lights = [dir, ambient, point, hemis, spot];
+            lights.forEach((light) => {
+                scene.add(light);
+            });
+
+            lights.forEach((light) => {
+                light.visible = false;
+            });
+            lights[0].visible = true;
+
+            const drop = document.getElementById('light');
+            drop.addEventListener('change', (e) => {
+                const selected = e.target.value;
+                lights.forEach((light) => {
+                    light.visible = false;
+                });
+                lights[selected].visible = true;
+            });
+
+            // 4. create the renderer     
+            renderer = new THREE.WebGLRenderer();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+
+            document.body.appendChild(renderer.domElement);
+
+    };
+    speed = 0.03;
+    speed2 = 0.03;
+    // main animation loop - calls 50-60 in a second.
+    let mainLoop = function () {
+        cube.position.x += speed;
+        cone.position.y += speed;
+        octahedron.position.x += speed2;
+        octahedron.position.y += speed2;
+        torus.position.y += speed;
+        // console.log("x", cube.position.x)
+        if(cube.position.x > 5)
+        {
+            speed = -0.03;
+        }
+        if(cube.position.x < -5)
+        {
+            speed = 0.03;
+        }
+        if(cone.position.y > 4)
+        {
+            speed = -0.03;
+        }
+        if(cone.position.y < -3)
+        {
+            speed = 0.03;
+        }
+        if(octahedron.position.x > 5)
+        {
+            speed2 = -0.05;
+        }
+        if(octahedron.position.x < -5)
+        {
+            speed2 = 0.05;
+        }
+        if(octahedron.position.y > 4)
+        {
+            speed2 = -0.01;
+        }
+        if(octahedron.position.y < -3)
+        {
+            speed2 = 0.01;
+        }
+        if(torus.position.y > 4)
+        {
+            speed = -0.03;
+        }
+        if(torus.position.y < -3)
+        {
+            speed = 0.03;
+        }
+        octahedron.rotation.x += 0.01;
+        octahedron.rotation.y += 0.01;
+        cube.rotation.y += 0.01;
+        cube.rotation.z += 0.01;
+        cone.rotation.x += 0.01;
+        cone.rotation.y += 0.01;
+        cone.rotation.z += 0.01;
+        torusKnot.rotation.x += 0.02;
+        renderer.render(scene, camera);
+        requestAnimationFrame(mainLoop);
+    };
+    init();
+    mainLoop();
+</script>
+    
